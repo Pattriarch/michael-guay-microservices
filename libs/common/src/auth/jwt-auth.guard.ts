@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Inject, Injectable } from "@nestjs/common";
-import { map, Observable, tap } from "rxjs";
+import { catchError, map, Observable, of, tap } from "rxjs";
 import { AUTH_SERVICE } from "@app/common/constants/services";
 import { ClientProxy } from "@nestjs/microservices";
 import { UserDto } from "@app/common/dto";
@@ -8,7 +8,6 @@ import { UserDto } from "@app/common/dto";
 export class JwtAuthGuard implements CanActivate {
 	constructor(@Inject(AUTH_SERVICE) private readonly authClient: ClientProxy) {
 	}
-
 
 	canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
 		const jwt = context.switchToHttp().getRequest().cookies?.Authentication;
@@ -24,7 +23,8 @@ export class JwtAuthGuard implements CanActivate {
 				// add user to request
 				context.switchToHttp().getRequest().user = res;
 			}),
-			map(() => true)
+			map(() => true),
+			catchError(() => of(false))
 		);
 	}
 }
