@@ -1,0 +1,53 @@
+name: github-actions
+run-name: Building and pushing project
+
+on:
+  push:
+    branches: ["master"]
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to Yandex Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: cr.yandex
+          username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+          password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
+
+      - name: Build and Push Docker Image (Auth)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: apps/auth/Dockerfile
+          push: true
+          tags: ${{ secrets.CONTAINER_REGISTRY_HUB }}/auth:latest
+
+      - name: Build and Push Docker Image (Notifications)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: apps/notifications/Dockerfile
+          push: true
+          tags: ${{ secrets.CONTAINER_REGISTRY_HUB }}/notifications:latest
+
+      - name: Build and Push Docker Image (Payments)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: apps/payments/Dockerfile
+          push: true
+          tags: ${{ secrets.CONTAINER_REGISTRY_HUB }}/payments:latest
+
+      - name: Build and Push Docker Image (Reservations)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: apps/reservations/Dockerfile
+          push: true
+          tags: ${{ secrets.CONTAINER_REGISTRY_HUB }}/reservations:latest
