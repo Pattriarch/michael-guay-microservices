@@ -35,7 +35,8 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
 						host: configService.get('AUTH_HOST'),
 						port: configService.get('AUTH_PORT'),
 					}
-				})
+				}),
+				inject: [ConfigService]
 			},
 			{
 				name: PAYMENTS_SERVICE,
@@ -45,7 +46,8 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
 						host: configService.get('PAYMENTS_HOST'),
 						port: configService.get('PAYMENTS_PORT'),
 					}
-				})
+				}),
+				inject: [ConfigService]
 			}
 		])
 	],
