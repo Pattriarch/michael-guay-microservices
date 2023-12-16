@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import * as Joi from "joi";
 import { LocalStrategy } from "./strategies/local.strategy";
 import { JwtStrategy } from "./strategies/jwt.strategy";
+import { HealthModule } from "@app/common";
 
 @Module({
 	imports: [
@@ -31,7 +32,8 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
 				}
 			}),
 			inject: [ConfigService]
-		})
+		}),
+		HealthModule
 	],
 	controllers: [AuthController],
 	providers: [AuthService, LocalStrategy, JwtStrategy],

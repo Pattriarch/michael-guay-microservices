@@ -7,6 +7,7 @@ import { ReservationDocument, ReservationSchema } from "./models/reservation.sch
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import * as Joi from 'joi';
 import { ClientsModule, Transport } from "@nestjs/microservices";
+import { HealthModule } from "@app/common";
 
 @Module({
 	imports: [
@@ -49,7 +50,8 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
 				}),
 				inject: [ConfigService]
 			}
-		])
+		]),
+		HealthModule
 	],
 	controllers: [ReservationsController],
 	providers: [ReservationsService, ReservationsRepository],
